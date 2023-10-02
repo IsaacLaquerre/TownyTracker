@@ -1,10 +1,11 @@
 const fetch = require("fetch").fetchUrl;
 const htmlToJson = require("html-to-json");
+const colors = require("colors/safe");
 const fs = require("fs");
 const settings = require("./settings.json");
 const Town = require("./classes/Town.js");
 
-const HOUR = 1000 * 60 * 60;
+const UPDATE_TIME = 1000 * 60;
 const TOWNSFILE_PATH = "./towns.json";
 const LOG_PATH = "./deletedLog.json";
 
@@ -142,6 +143,12 @@ function update_towns(newTowns) {
     });
 }
 
+function clear_towns() {
+    fs.writeFile(TOWNSFILE_PATH, JSON.stringify({}), "utf8", () => {
+        console.log("--------- townFile cleared ---------");
+    });
+}
+
 function add_to_log(town) {
     fs.readFile(LOG_PATH, function (err, data) {
         if (err) console.log(err);
@@ -161,13 +168,22 @@ function add_to_log(town) {
     });
 }
 
+function clear_log() {
+    fs.writeFile(LOG_PATH, JSON.stringify({ deletedTowns: [] }), "utf8", () => {
+        console.log("--------- logFile cleared ---------");
+    });
+}
+
 function update() {
     get_towns().then(towns => {
         compare_town_lists(townsFile, towns).then(mismatch => {
-            if (mismatch.length !== 0) {
+            if (mismatch.added.length !== 0 || mismatch.deleted.length !== 0) {
                 for (i in mismatch.added) {
                     console.log(
-                        mismatch.added[i].name +
+                        "[" +
+                            colors.green("+") +
+                            "] " +
+                            mismatch.added[i].name +
                             " has been created! (" +
                             mismatch.added[i].spawn.x +
                             ", " +
@@ -177,7 +193,10 @@ function update() {
                 }
                 for (i in mismatch.deleted) {
                     console.log(
-                        mismatch.deleted[i].name +
+                        "[" +
+                            colors.red("-") +
+                            "] " +
+                            mismatch.deleted[i].name +
                             " has been deleted! (" +
                             mismatch.deleted[i].spawn.x +
                             ", " +
@@ -190,8 +209,10 @@ function update() {
             }
         });
 
-        setInterval(() => update(), HOUR);
+        setInterval(() => update(), UPDATE_TIME);
     });
 }
 
 update();
+//clear_towns();
+//clear_log();
