@@ -35,7 +35,9 @@ function get_towns() {
                     })
                     .then(async name => {
                         let townName = name.text.trim().split(" (")[0];
-                        let townNation = "(" + name.text.trim().split(" (")[1];
+                        let townNation =
+                            name.text.trim().slice(0, -1).split(" (")[1] ||
+                            "None";
                         await htmlToJson
                             .parse(townRaw.popup, {
                                 text: function ($doc) {
@@ -65,15 +67,9 @@ function get_towns() {
                                         townPopup[7].substring(
                                             4,
                                             townPopup[7].length
-                                        ) === "true"
+                                        ) === "true",
+                                    nation: townNation
                                 };
-
-                                townNation != "(undefined"
-                                    ? (townInfo.nation = townNation.slice(
-                                          1,
-                                          -1
-                                      ))
-                                    : (townInfo.nation = "None");
 
                                 let town = new Town(
                                     townName,
@@ -150,21 +146,16 @@ function clear_towns() {
 }
 
 function add_to_log(town) {
-    fs.readFile(LOG_PATH, function (err, data) {
-        if (err) console.log(err);
-        else {
-            let log = JSON.parse(data);
-            log.deletedTowns.push({
-                name: town.name,
-                coords: { x: town.spawn.x, y: town.spawn.y },
-                claimedCoords: town.claimedCoords,
-                mayor: town.mayor
-            });
+    let log = logFile;
+    log.deletedTowns.push({
+        name: town.name,
+        coords: { x: town.spawn.x, y: town.spawn.y },
+        claimedCoords: town.claimedCoords,
+        mayor: town.mayor
+    });
 
-            fs.writeFile(LOG_PATH, JSON.stringify(log), "utf8", () => {
-                console.log("--------- logFile updated ---------");
-            });
-        }
+    fs.writeFile(LOG_PATH, JSON.stringify(log), "utf8", () => {
+        console.log("--------- logFile updated ---------");
     });
 }
 
