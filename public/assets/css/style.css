@@ -1,0 +1,166 @@
+:root {
+    --bgColor: rgb(19, 21, 29);
+    --bgColor2: rgb(28, 30, 41);
+    --bgColor3: rgb(37, 43, 56);
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 95vw;
+    height: 100vh;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+    background-color: var(--bgColor);
+    color: rgb(212, 212, 212);
+    font-weight: normal;
+    font-size: 16px;
+}
+
+table {
+    border-spacing: 0;
+}
+
+tr {
+    border-spacing: 0;
+}
+
+th {
+    font-weight: normal;
+    font-size: 18px;
+    border-left: 1px solid grey;
+    border-right: 1px solid grey;
+    border-bottom: 1px solid grey;
+}
+
+td {
+    padding: 2.5px;
+    border: 0.5px solid grey;
+    border-spacing: 0;
+    font-size: 16px;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    padding: 1px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: var(--bgColor);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #464646ef;
+    border: 2.5px solid var(--bgColor);
+    border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #3b3b3bef;
+}
+
+#sections {
+    display: flex;
+    flex-direction: column;
+    width: 95vw;
+    height: 100%;
+    margin: 2.5vw;
+}
+
+#sections #selection {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5px;
+    height: 25px;
+    margin-left: 5px;
+}
+
+#selection div.tab {
+    position: relative;
+    width: 75px;
+    background-color: var(--bgColor2);
+    border: 1px solid grey;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    border-radius: 5px 5px 0px 0px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    user-select: none;
+}
+
+#selection div.tab.selected {
+    background-color: var(--bgColor3);
+}
+
+#selection div.tab:hover {
+    filter: brightness(110%);
+}
+
+#selection span.tabTitle {
+    font-size: 18px;
+    margin: 5px;
+}
+
+#sections div.section {
+    width: 100%;
+    height: 100%;
+    display: none;
+    border: 2px solid rgb(190, 190, 190);
+    border-radius: 2.5px;
+}
+
+#sections div#towns.selected {
+    display: flex;
+}
+
+#sections div#players.selected {
+    display: block;
+}
+
+#towns {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    transform: translateY(1px);
+}
+
+#townsList {
+    font-size: 16px;
+    font-weight: normal;
+    width: 60%;
+}
+
+#deletedTowns {
+    font-size: 16px;
+    font-weight: normal;
+    width: 40%;
+    height: max-content;
+}
+
+#playersList {
+    font-size: 16px;
+    font-weight: normal;
+    width: 100%;
+}
+
+#update {
+    position: absolute;
+    right: calc(2.5% - 15px);
+    top: 10px;
+    user-select: none;
+    width: 60px;
+    height: 12.5px;
+    line-height: 100%;
+    font-size: 16px;
+    padding: 10px;
+    border: 2px solid var(--bgColor3);
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+#update:hover {
+    background-color: var(--bgColor3);
+}

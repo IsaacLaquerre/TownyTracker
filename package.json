@@ -1,26 +1,29 @@
 {
-  "name": "townytracker",
-  "version": "1.0.0",
-  "description": "bot to track deleted towns",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/IsaacLaquerre/TownyTracker.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/IsaacLaquerre/TownyTracker/issues"
-  },
-  "homepage": "https://github.com/IsaacLaquerre/TownyTracker#readme",
-  "dependencies": {
-    "colors": "^1.4.0",
-    "fetch": "^1.1.0",
-    "fs": "^0.0.1-security",
-    "html-to-json": "^0.6.0"
-  }
+    "name": "townytracker",
+    "version": "1.0.0",
+    "description": "bot to track deleted towns",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "electron ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/IsaacLaquerre/TownyTracker.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/IsaacLaquerre/TownyTracker/issues"
+    },
+    "homepage": "https://github.com/IsaacLaquerre/TownyTracker#readme",
+    "dependencies": {
+        "fetch": "^1.1.0",
+        "fs": "^0.0.1-security",
+        "html-to-json": "^0.6.0"
+    },
+    "devDependencies": {
+        "electron": "^26.2.4"
+    }
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TownyTracker</title>
+
+        <link rel="stylesheet" href="../assets/css/style.css" type="text/css" />
+        <link
+            rel="stylesheet"
+            href="../assets/css/townList.css"
+            type="text/css"
+        />
+        <link
+            rel="stylesheet"
+            href="../assets/css/playerList.css"
+            type="text/css"
+        />
+        <script type="text/javascript" src="../assets/js/index.js"></script>
+    </head>
+    <body onload="onLoad();">
+        <div id="sections">
+            <div id="selection"></div>
+            <div id="tabs">
+                <div id="towns" class="section">
+                    <table id="townsList">
+                        <tr class="header">
+                            <th>Name</th>
+                            <th>Nation</th>
+                            <th>Mayor</th>
+                            <th>Spawn</th>
+                        </tr>
+                    </table>
+                    <table id="deletedTowns">
+                        <tr>
+                            <th colspan="2">Deleted Towns</th>
+                        </tr>
+                    </table>
+                </div>
+                <div id="players" class="section">
+                    <table id="playersList">
+                        <tr class="header">
+                            <th>Name</th>
+                            <th>Coords</th>
+                            <th>World</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="update">
+            <span>Update</span>
+        </div>
+    </body>
+
+    <script>
+        function onLoad() {
+            setUp();
+        }
+    </script>
+</html>
