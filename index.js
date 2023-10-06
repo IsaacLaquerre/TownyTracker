@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, webContents } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("node:path");
 const towns = require("./towns.js");
 const players = require("./players.js");

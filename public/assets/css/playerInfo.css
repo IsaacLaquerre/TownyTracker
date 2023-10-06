@@ -1,0 +1,74 @@
+#playerWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: start;
+}
+
+div.playerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+span.playerUsername::before {
+    content: "Username: ";
+    font-size: 15px;
+}
+
+span.playerUUID {
+    font-family: "Glober SemiBold";
+    font-size: 14px;
+}
+
+span.playerUUID::before {
+    content: "UUID: ";
+    font-size: 15px;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+}
+
+span.playerCoords::before {
+    content: "Coords: ";
+    font-size: 15px;
+}
+
+span.playerWorld::before {
+    content: "World: ";
+    font-size: 15px;
+}
+
+div.playerHealth img {
+    transform: translateY(5px);
+}
+
+div.playerHealth::before {
+    content: "Health: ";
+    font-size: 15px;
+}
+
+div.playerArmor img {
+    transform: translateY(5px);
+}
+
+div.playerArmor::before {
+    content: "Armor: ";
+    font-size: 15px;
+}
+
+span.playerAfk::before {
+    content: "AFK: ";
+    font-size: 15px;
+}
+
+img.playerHead {
+    height: 85%;
+}
+
+span.playerAfk span.true {
+    color: rgb(89, 231, 76);
+}
+
+span.playerAfk span.false {
+    color: rgb(231, 81, 76);
+}

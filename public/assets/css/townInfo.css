@@ -1,0 +1,60 @@
+#townWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    justify-content: start;
+}
+
+div.townInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+span.townName::before {
+    content: "Name: ";
+    font-size: 15px;
+}
+
+span.townNation::before {
+    content: "Nation: ";
+    font-size: 15px;
+}
+
+span.townSpawn::before {
+    content: "Spawn coordinates: ";
+    font-size: 15px;
+}
+
+ul.townCoords::before {
+    content: "Claimed coordiantes: ";
+    font-size: 15px;
+}
+
+span.townMayor::before {
+    content: "Mayor: ";
+    font-size: 15px;
+}
+
+ul.townAssistants::before {
+    content: "Assistants: ";
+    font-size: 15px;
+}
+
+ul.townResidents::before {
+    content: "Residents: ";
+    font-size: 15px;
+}
+
+span.townPvp::before {
+    content: "PVP enabled: ";
+    font-size: 15px;
+}
+
+span.townPvp span.true {
+    color: rgb(89, 231, 76);
+}
+
+span.townPvp span.false {
+    color: rgb(231, 81, 76);
+}

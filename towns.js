@@ -150,10 +150,6 @@ function compare_town_lists(oldTowns, newTowns) {
                     mismatch.added.push(newTowns[i]);
             }
 
-            /*mismatch.deleted.push(
-                oldTowns.find(town => town.name === "Ouanalao")
-            );*/
-
             resolve(mismatch);
         }
     });

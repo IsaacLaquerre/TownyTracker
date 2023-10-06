@@ -16,46 +16,96 @@
             href="../assets/css/playerList.css"
             type="text/css"
         />
+        <link
+            rel="stylesheet"
+            href="../assets/css/townInfo.css"
+            type="text/css"
+        />
+        <link
+            rel="stylesheet"
+            href="../assets/css/playerInfo.css"
+            type="text/css"
+        />
         <script type="text/javascript" src="../assets/js/index.js"></script>
     </head>
-    <body onload="onLoad();">
+    <body onload="on_load();">
+        <div id="updateWrapper">
+            <div id="searchWrapper">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    enable-background="new 0 0 32 32"
+                    viewBox="0 0 32 32"
+                    xml:space="preserve"
+                >
+                    <path
+                        d="M27.414,24.586l-5.077-5.077C23.386,17.928,24,16.035,24,14c0-5.514-4.486-10-10-10S4,8.486,4,14  s4.486,10,10,10c2.035,0,3.928-0.614,5.509-1.663l5.077,5.077c0.78,0.781,2.048,0.781,2.828,0  C28.195,26.633,28.195,25.367,27.414,24.586z M7,14c0-3.86,3.14-7,7-7s7,3.14,7,7s-3.14,7-7,7S7,17.86,7,14z"
+                    />
+                </svg>
+                <input
+                    type="text"
+                    name="search"
+                    id="searchBar"
+                    placeholder="Search"
+                    oninput="search(this.value);"
+                />
+            </div>
+            <div id="updateTimeDropdown">
+                <label for="updateTime">Update every </label>
+                <select
+                    id="updateTime"
+                    name="updateTime"
+                    onchange="change_update_time(this.value);"
+                    class="dropdown"
+                >
+                    <option value="5" selected>5 minutes</option>
+                    <option value="10">10 minutes</option>
+                    <option value="15">15 minutes</option>
+                    <option value="30">30 minutes</option>
+                    <option value="60">1 hour</option>
+                </select>
+            </div>
+            <div id="update">
+                <span>Update</span>
+            </div>
+        </div>
         <div id="sections">
             <div id="selection"></div>
             <div id="tabs">
                 <div id="towns" class="section">
                     <table id="townsList">
                         <tr class="header">
-                            <th>Name</th>
-                            <th>Nation</th>
-                            <th>Mayor</th>
-                            <th>Spawn</th>
+                            <th class="townName">Name</th>
+                            <th class="townNation">Nation</th>
+                            <th class="townMayor">Mayor</th>
+                            <th class="townSpawn">Spawn</th>
                         </tr>
                     </table>
                     <table id="deletedTowns">
                         <tr>
-                            <th colspan="2">Deleted Towns</th>
+                            <th class="deletedTowns" colspan="2">
+                                Deleted towns
+                            </th>
                         </tr>
                     </table>
                 </div>
                 <div id="players" class="section">
                     <table id="playersList">
                         <tr class="header">
-                            <th>Name</th>
-                            <th>Coords</th>
-                            <th>World</th>
+                            <th class="playerName">Name</th>
+                            <th class="playerCoords">Coords</th>
+                            <th class="playerWorld">World</th>
+                            <th class="playerAfk">AFK</th>
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
-        <div id="update">
-            <span>Update</span>
-        </div>
     </body>
 
     <script>
-        function onLoad() {
-            setUp();
+        function on_load() {
+            set_up();
         }
     </script>
 </html>
