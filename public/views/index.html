@@ -8,6 +8,11 @@
         <link rel="stylesheet" href="../assets/css/style.css" type="text/css" />
         <link
             rel="stylesheet"
+            href="../assets/css/search.css"
+            type="text/css"
+        />
+        <link
+            rel="stylesheet"
             href="../assets/css/townList.css"
             type="text/css"
         />
@@ -47,8 +52,196 @@
                     name="search"
                     id="searchBar"
                     placeholder="Search"
-                    oninput="search(this.value);"
+                    oninput="search();"
                 />
+                <div id="advancedSearch">
+                    <div id="townsSearch" class="container">
+                        <div>
+                            <label for="nation">Nation: </label>
+                            <input
+                                id="searchNation"
+                                name="nation"
+                                type="text"
+                                oninput="search();"
+                            />
+                        </div>
+                        <div>
+                            <label for="mayor">Mayor: </label>
+                            <input
+                                id="searchMayor"
+                                name="mayor"
+                                type="text"
+                                oninput="search();"
+                            />
+                        </div>
+                        <div>
+                            <label for="member">Member: </label>
+                            <input
+                                id="searchMember"
+                                name="member"
+                                type="text"
+                                oninput="search();"
+                            />
+                        </div>
+                        <div>
+                            <label for="pvp">PVP: </label>
+                            <select
+                                id="searchPvp"
+                                class="dropdown"
+                                name="pvp"
+                                oninput="search();"
+                                data-default="all"
+                            >
+                                <option value="all" selected>All</option>
+                                <option value="true">Enabled</option>
+                                <option value="false">Disabled</option>
+                            </select>
+                        </div>
+                        <label for="searchCoords"
+                            >Has claimed chunk around:</label
+                        >
+                        <div class="searchCoords" id="searchCoordsTown">
+                            <input
+                                id="searchCoordsTownX"
+                                type="number"
+                                placeholder="X"
+                                oninput="javascript: if (this.value.length > (this.value.startsWith('-') ? 6 : 5)) this.value = this.value.slice(0, (this.value.startsWith('-') ? 6 : 5)); search();"
+                            />
+                            <input
+                                id="searchCoordsTownY"
+                                type="number"
+                                placeholder="Y"
+                                oninput="javascript: if (this.value.length > (this.value.startsWith('-') ? 6 : 5)) this.value = this.value.slice(0, (this.value.startsWith('-') ? 6 : 5)); search();"
+                            />
+                            <input
+                                id="searchCoordsTownRad"
+                                type="number"
+                                placeholder="Radius"
+                                oninput="javascript: if (this.value.length > 4) this.value = this.value.slice(0, 5); search();"
+                            />
+                        </div>
+                        <div class="clearFields">
+                            <span onclick="clear_search_fields('towns');"
+                                >Clear</span
+                            >
+                        </div>
+                    </div>
+
+                    <div id="playersSearch" class="container">
+                        <div>
+                            <label for="world">World: </label>
+                            <select
+                                id="searchWorld"
+                                class="dropdown"
+                                name="world"
+                                onchange="search();"
+                                data-default="all"
+                            >
+                                <option value="all" selected>All</option>
+                                <option value="minecraft_spawn">Spawn</option>
+                                <option value="minecraft_overworld">
+                                    Overworld
+                                </option>
+                                <option value="minecraft_resourceworld">
+                                    Resource World
+                                </option>
+                                <option value="minecraft_the_nether">
+                                    The Nether
+                                </option>
+                                <option value="minecraft_the_end">
+                                    The End
+                                </option>
+                                <option value="minecraft_pvpworld">
+                                    PVP World
+                                </option>
+                                <option value="minecraft_coven_0">
+                                    Dungeon Arena
+                                </option>
+                                <option value="minecraft_boss">Events</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="afk">AFK: </label>
+                            <select
+                                id="searchAfk"
+                                class="dropdown"
+                                name="afk"
+                                onchange="search();"
+                                data-default="all"
+                            >
+                                <option value="all" selected>All</option>
+                                <option value="true">True</option>
+                                <option value="false">False</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="health">Health: </label>
+                            <select
+                                id="searchHealthType"
+                                class="dropdown"
+                                name="health"
+                                onchange="search();"
+                                data-default="equals"
+                            >
+                                <option value="equals" selected>Equals</option>
+                                <option value="above">Above</option>
+                                <option value="below">Below</option>
+                            </select>
+                            <input
+                                id="searchHealthInput"
+                                type="number"
+                                placeholder="0"
+                                oninput="search();"
+                            />
+                        </div>
+                        <div>
+                            <label for="armor">Armor: </label>
+                            <select
+                                id="searchArmorType"
+                                class="dropdown"
+                                name="armor"
+                                onchange="search();"
+                                data-default="equals"
+                            >
+                                <option value="equals" selected>Equals</option>
+                                <option value="above">Above</option>
+                                <option value="below">Below</option>
+                            </select>
+                            <input
+                                id="searchArmorInput"
+                                type="number"
+                                placeholder="0"
+                                oninput="search();"
+                            />
+                        </div>
+                        <label for="searchCoords">Is around:</label>
+                        <div class="searchCoords" id="searchCoordsPlayer">
+                            <input
+                                id="searchCoordsPlayerX"
+                                type="number"
+                                placeholder="X"
+                                oninput="javascript: if (this.value.length > (this.value.startsWith('-') ? 6 : 5)) this.value = this.value.slice(0, (this.value.startsWith('-') ? 6 : 5)); search();"
+                            />
+                            <input
+                                id="searchCoordsPlayerY"
+                                type="number"
+                                placeholder="Y"
+                                oninput="javascript: if (this.value.length > (this.value.startsWith('-') ? 6 : 5)) this.value = this.value.slice(0, (this.value.startsWith('-') ? 6 : 5)); search();"
+                            />
+                            <input
+                                id="searchCoordsPlayerRad"
+                                type="number"
+                                placeholder="Radius"
+                                oninput="javascript: if (this.value.length > 4) this.value = this.value.slice(0, 5); search();"
+                            />
+                        </div>
+                        <div class="clearFields">
+                            <span onclick="clear_search_fields('players');"
+                                >Clear</span
+                            >
+                        </div>
+                    </div>
+                </div>
             </div>
             <div id="updateTimeDropdown">
                 <label for="updateTime">Update every </label>
@@ -58,7 +251,7 @@
                     onchange="change_update_time(this.value);"
                     class="dropdown"
                 >
-                    <option value="5" selected>5 minutes</option>
+                    <option value="5">5 minutes</option>
                     <option value="10">10 minutes</option>
                     <option value="15">15 minutes</option>
                     <option value="30">30 minutes</option>

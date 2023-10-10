@@ -1,8 +1,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
-/*const fs = require("fs");
-window.path = __dirname;*/
 
 contextBridge.exposeInMainWorld("electronAPI", {
+    init_towns: () => ipcRenderer.invoke("init_towns"),
     update_towns: oldTowns => ipcRenderer.invoke("update_towns", oldTowns),
     update_players: () => ipcRenderer.invoke("update_players")
 });

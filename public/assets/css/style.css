@@ -56,7 +56,7 @@ select.dropdown {
     background-color: var(--bgColor);
     cursor: pointer;
     user-select: none;
-    transition: 0.2s ease;
+    transition: 0.2s ease-out;
 }
 
 select.dropdown:focus {
@@ -112,7 +112,7 @@ select.dropdown:hover {
     -webkit-border-radius: 5px 5px 0px 0px;
     border-radius: 5px 5px 0px 0px;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: 0.2s ease-out;
     user-select: none;
 }
 
@@ -158,6 +158,10 @@ select.dropdown:hover {
     width: 60%;
 }
 
+tr.town.deleted {
+    color: rgb(231, 81, 76);
+}
+
 #deletedTowns {
     font-size: 16px;
     font-weight: normal;
@@ -169,40 +173,6 @@ select.dropdown:hover {
     font-size: 16px;
     font-weight: normal;
     width: 100%;
-}
-
-#searchWrapper {
-    display: flex;
-    flex-direction: row;
-    gap: 7.5px;
-    transform: translate(5px, 1px);
-}
-
-#searchWrapper svg {
-    fill: #bbbbbb;
-    width: 25px;
-    height: 25px;
-    transform: translate(2.5px, 4px);
-}
-
-#searchWrapper input#searchBar {
-    width: 175px;
-    height: 25px;
-    padding: 2.5px 5px;
-    background-color: var(--bgColor);
-    border: 2px solid var(--bgColor2);
-    color: var(--textColor);
-    transition: 0.2s ease;
-}
-
-#searchWrapper input#searchBar:focus {
-    outline: 1px solid #bbbbbb;
-    background-color: var(--bgColor2);
-    box-shadow: 0 0 5px var(--textColor);
-}
-
-#searchWrapper input#searchBar:hover {
-    background-color: var(--bgColor2);
 }
 
 #updateWrapper {
@@ -226,15 +196,23 @@ select.dropdown:hover {
     line-height: 70%;
     font-size: 16px;
     padding: 10px;
-    border: 2px solid var(--bgColor3);
+    border: 2px solid var(--bgColor2);
+    background-color: var(--bgColor);
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: background-color 0.2s ease-out, border-color 0.2s ease-out,
+        transform 0.025s ease-out;
 }
 
 #update:hover {
+    background-color: var(--bgColor2);
+}
+
+#update:active {
     background-color: var(--bgColor3);
+    border-color: var(--bgColor3);
+    transform: scale(95%);
 }
 
 #infoWindow {
@@ -265,7 +243,7 @@ span.closeWindow {
     z-index: 102;
     border: 1px solid var(--bgColor2);
     padding: 5px 7.5px;
-    transition: 0.2s ease;
+    transition: 0.2s ease-out;
 }
 
 span.closeWindow:hover {

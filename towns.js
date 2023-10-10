@@ -24,6 +24,17 @@ module.exports = {
                 });
             });
         });
+    },
+    get_towns: () => {
+        return get_towns();
+    },
+    update_town_file: newTowns => {
+        fs.writeFile(
+            TOWNSFILE_PATH,
+            JSON.stringify(newTowns),
+            "utf8",
+            () => {}
+        );
     }
 };
 
@@ -64,27 +75,61 @@ function get_towns() {
                                     let townPopup = popup.text
                                         .split("\n")
                                         .filter(field => field !== "    ");
-                                    let townInfo = {
-                                        mayor: townPopup[3].substring(
-                                            4,
-                                            townPopup[3].length
-                                        ),
-                                        assistants: townPopup[5]
-                                            .substring(4, townPopup[5].length)
-                                            .split(", "),
-                                        residents: townPopup
-                                            .find(field =>
-                                                field.includes("Residents: ")
-                                            )
-                                            .split(": ")[1]
-                                            .split(", "),
-                                        pvp:
-                                            townPopup[7].substring(
+                                    if (townName === "") {
+                                        var townInfo = {
+                                            mayor: townPopup[2].substring(
                                                 4,
-                                                townPopup[7].length
-                                            ) === "true",
-                                        nation: townNation
-                                    };
+                                                townPopup[2].length
+                                            ),
+                                            assistants: townPopup[4]
+                                                .substring(
+                                                    4,
+                                                    townPopup[4].length
+                                                )
+                                                .split(", "),
+                                            residents: townPopup
+                                                .find(field =>
+                                                    field.includes(
+                                                        "Residents: "
+                                                    )
+                                                )
+                                                .split(": ")[1]
+                                                .split(", "),
+                                            pvp:
+                                                townPopup[7].substring(
+                                                    4,
+                                                    townPopup[7].length
+                                                ) === "true",
+                                            nation: townNation
+                                        };
+                                    } else {
+                                        townInfo = {
+                                            mayor: townPopup[3].substring(
+                                                4,
+                                                townPopup[3].length
+                                            ),
+                                            assistants: townPopup[5]
+                                                .substring(
+                                                    4,
+                                                    townPopup[5].length
+                                                )
+                                                .split(", "),
+                                            residents: townPopup
+                                                .find(field =>
+                                                    field.includes(
+                                                        "Residents: "
+                                                    )
+                                                )
+                                                .split(": ")[1]
+                                                .split(", "),
+                                            pvp:
+                                                townPopup[7].substring(
+                                                    4,
+                                                    townPopup[7].length
+                                                ) === "true",
+                                            nation: townNation
+                                        };
+                                    }
 
                                     let town = new Town(
                                         townName,
@@ -153,10 +198,6 @@ function compare_town_lists(oldTowns, newTowns) {
             resolve(mismatch);
         }
     });
-}
-
-function update_towns(newTowns) {
-    fs.writeFile(TOWNSFILE_PATH, JSON.stringify(newTowns), "utf8", () => {});
 }
 
 function clear_towns() {

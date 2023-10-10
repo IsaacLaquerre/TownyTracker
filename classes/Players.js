@@ -18,35 +18,16 @@ module.exports = class Players {
     get_players_around(coords, radius) {
         let players = [];
 
-        console.log({ x: coords.x, y: coords.y }, radius);
-
         for (var i in this.list) {
             let player = this.list[i];
-            let dLat = degToRad(coords.x - player.coords.x);
-            let dLon = degToRad(coords.y - player.coords.y);
-            let a =
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.sin(dLon / 2) *
-                    Math.sin(dLon / 2) *
-                    Math.cos(degToRad(player.coords.x)) *
-                    Math.cos(degToRad(coords.x));
-            let c =
-                2 *
-                Math.atan2(Math.sqrt(Math.abs(a)), Math.sqrt(Math.abs(1 - a))) *
-                radius;
+            let a = coords.x - player.coords.x;
+            let b = coords.y - player.coords.y;
+
+            let c = Math.sqrt(a * a + b * b);
 
             if (c < radius || c === radius) {
                 players.push(player);
             }
-
-            console.log(
-                player.username,
-                { x: player.coords.x, y: player.coords.y },
-                "dLat: " + dLat,
-                "dLon: " + dLon,
-                "a: " + a,
-                "c: " + c
-            );
         }
 
         return players;

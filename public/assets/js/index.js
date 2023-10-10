@@ -1,40 +1,52 @@
 var townList = [];
 var playerList = [];
 var currentTab = localStorage.getItem("currentTab") || "towns";
-var updateTime = 300000;
+var updateTime = localStorage.getItem("updateTime") || 300000;
+var tabs = [];
 
 var updateInterval = setInterval(update_loop, updateTime);
 
 function set_up() {
+    tabs = document.querySelector("#tabs");
+
     document.querySelector("div#update").addEventListener("mousedown", e => {
-        let activeTab = document.querySelector("#tabs .selected");
-        update(activeTab.id);
+        for (i = 0; i < tabs.children.length; i++) {
+            update(tabs.children[i].id);
+        }
     });
 
+    document.querySelector("select#updateTime").value = updateTime / 60 / 1000;
+
     var sections = document.querySelectorAll("div.section");
+    var advancedSearches = document.querySelector("#advancedSearch");
     var selection = document.querySelector("#selection");
-    var tabs = document.querySelector("#tabs");
     var deletedTowns = document.querySelector("#deletedTowns").children[0];
 
     for (i = 0; i < sections.length; i++) {
+        let section = sections[i];
+
         let tab = document.createElement("div");
         tab.classList.add("tab");
 
         let tabTitle = document.createElement("span");
         tabTitle.classList.add("tabTitle");
-        tabTitle.innerHTML = sections[i].id.capitalize();
+        tabTitle.innerHTML = section.id.capitalize();
 
         tab.appendChild(tabTitle);
         selection.appendChild(tab);
 
-        if (sections[i].id === currentTab) {
+        if (section.id === currentTab) {
             tab.classList.add("selected");
+            document.querySelector("#" + section.id).classList.add("selected");
             document
-                .querySelector("#" + sections[i].id)
+                .querySelector("#" + section.id + "Search")
                 .classList.add("selected");
         }
 
-        update(sections[i].id);
+        init(section.id).then(() => {
+            update(section.id);
+            //render(section.id, section.id === "towns" ? townList : playerList);
+        });
 
         tab.addEventListener(
             "mousedown",
@@ -47,9 +59,18 @@ function set_up() {
                     tabs.children[i].classList.remove("selected");
                 }
 
+                for (i = 0; i < advancedSearch.children.length; i++) {
+                    advancedSearch.children[i].classList.remove("selected");
+                }
+
                 tab.classList.add("selected");
                 document
                     .querySelector("#" + tabTitle.innerHTML.toLowerCase())
+                    .classList.add("selected");
+                document
+                    .querySelector(
+                        "#" + tabTitle.innerHTML.toLowerCase() + "Search"
+                    )
                     .classList.add("selected");
                 currentTab = tabTitle.innerHTML.toLowerCase();
                 localStorage.setItem("currentTab", currentTab);
@@ -61,31 +82,47 @@ function set_up() {
     }
 }
 
+async function init(type) {
+    return new Promise(async resolve => {
+        switch (type) {
+            case "towns":
+                var response = await window.electronAPI.init_towns();
+                townList = response;
+                break;
+            case "players":
+                var response = await window.electronAPI.update_players();
+                playerList = response;
+                break;
+            case "default":
+                break;
+        }
+        resolve();
+    });
+}
+
 async function update(type) {
     switch (type) {
         case "towns":
             var response = await window.electronAPI.update_towns(townList);
-            var init = false;
-            if (townList.length === 0) init = true;
-            townList = response.townList;
-            if (
-                response.mismatch.added.length !== 0 ||
-                response.mismatch.deleted.length !== 0 ||
-                init
-            ) {
-                render(type, response.townList).then(() => {
-                    if (currentTab === type) update_scroll_bar();
-                });
-            }
-            /*var testTown = response.townList.find(
+
+            var testTown = response.townList.find(
                 town => town.name === "Riverside"
             );
-            response.mismatch.deleted.push(testTown);*/
+
+            //response.mismatch.deleted.push(testTown);
             if (response.mismatch.deleted.length !== 0) {
-                for (i = 0; i < response.mismatch.deleted.length; i++) {
+                for (i in response.mismatch.deleted) {
                     add_deleted_town(response.mismatch.deleted[i]);
                 }
             }
+            if (response.mismatch.added.length !== 0) {
+                for (i in response.mismatch.added) {
+                    add_new_town(response.mismatch.added[i]);
+                }
+            }
+            render(type, response.townList).then(() => {
+                if (currentTab === type) update_scroll_bar();
+            });
             break;
         case "players":
             var response = await window.electronAPI.update_players();
@@ -97,6 +134,7 @@ async function update(type) {
         default:
             break;
     }
+    search();
 }
 
 function render(tab, response) {
@@ -121,7 +159,11 @@ function render(tab, response) {
                 for (i in response) {
                     var town = document.createElement("tr");
                     town.classList.add("town");
+                    if (response[i].deleted) town.classList.add("deleted");
                     town.title = "View info";
+                    town.id =
+                        response[i].name.substring(0, 1).toUpperCase() +
+                        response[i].spawn.x.toString().replace("-", "neg");
 
                     var townName = document.createElement("td");
                     townName.classList.add("townName");
@@ -213,6 +255,7 @@ function render(tab, response) {
             default:
                 break;
         }
+        update_scroll_bar();
         resolve();
     });
 }
@@ -225,7 +268,12 @@ function infoWindow(el) {
     var infoWindow = document.createElement("div");
     infoWindow.id = "infoWindow";
     document.body.style.overflow = "hidden";
-    document.body.style.filter = "blur(5px)";
+    document.body.style.filter = "blur(3px)";
+    document.querySelector("#updateWrapper").style.transform =
+        currentTab === "towns"
+            ? "translate(-10px, -2.5vw)"
+            : "translate(0, -2.5vw)";
+    update_scroll_bar();
 
     var x = document.createElement("span");
     x.style =
@@ -234,8 +282,10 @@ function infoWindow(el) {
     x.innerHTML = "X";
     x.onclick = () => {
         fadeOut(infoWrapper).then(() => {
-            document.body.style.overflow = "auto";
-            document.body.style.filter = "none";
+            document.body.style.overflow = "";
+            document.body.style.filter = "";
+            document.querySelector("#updateWrapper").style.transform = "";
+            update_scroll_bar();
         });
     };
 
@@ -243,8 +293,10 @@ function infoWindow(el) {
     blockClicks.id = "blockClicks";
     blockClicks.onclick = () => {
         fadeOut(infoWrapper).then(() => {
-            document.body.style.overflow = "auto";
-            document.body.style.filter = "none";
+            document.body.style.overflow = "";
+            document.body.style.filter = "";
+            document.querySelector("#updateWrapper").style.transform = "";
+            update_scroll_bar();
         });
     };
 
@@ -496,6 +548,12 @@ function add_deleted_town(town) {
     let spawn = town.spawn;
     let name = town.name;
 
+    for (i in deletedTowns.children) {
+        if (deletedTowns.children[i].tagName === "TR") {
+            if (deletedTowns.children[i].children[0].innerHTML === name) return;
+        }
+    }
+
     var townEl = document.createElement("tr");
     townEl.classList.add("town");
 
@@ -513,32 +571,244 @@ function add_deleted_town(town) {
     townEl.appendChild(townSpawn);
 
     deletedTowns.appendChild(townEl);
+
+    townList.find(town => town.name === name).deleted = true;
+}
+
+function add_new_town(town) {
+    townList.push(town);
 }
 
 function change_update_time(value) {
     updateTime = value * 60000;
+    localStorage.setItem("updateTime", updateTime);
     clearInterval(updateInterval);
     new_interval(updateTime);
 }
 
 function update_loop() {
-    update(currentTab);
+    for (i = 0; i < tabs.children.length; i++) {
+        update(tabs.children[i].id);
+    }
 }
 
 function new_interval(time) {
     updateInterval = setInterval(update_loop, time);
 }
 
-function search(query) {
-    var townSearch = townList.filter(town =>
-        town.name.toLowerCase().includes(query.toLowerCase())
+function search() {
+    var townSearch = townList;
+
+    var query = document.querySelector("#searchBar").value;
+    if (query !== "") {
+        townSearch = townSearch.filter(town =>
+            town.name.toLowerCase().includes(query.toLowerCase())
+        );
+    }
+
+    var searchNation = document.querySelector("#searchNation").value;
+    if (searchNation !== "") {
+        townSearch = townSearch.filter(town =>
+            town.nation.toLowerCase().includes(searchNation.toLowerCase())
+        );
+    }
+
+    var searchMayor = document.querySelector("#searchMayor").value;
+    if (searchMayor !== "") {
+        townSearch = townSearch.filter(town =>
+            town.mayor.toLowerCase().includes(searchMayor.toLowerCase())
+        );
+    }
+
+    var searchMember = document.querySelector("#searchMember").value;
+    if (searchMember !== "") {
+        var townNames = [];
+        for (i in townSearch) {
+            for (j in townSearch[i].residents) {
+                if (townSearch[i] === undefined) continue;
+                if (
+                    townSearch[i].residents[j]
+                        .toLowerCase()
+                        .includes(searchMember.toLowerCase())
+                ) {
+                    townNames.push(townSearch[i].name);
+                }
+            }
+        }
+        townSearch = townSearch.filter(town => townNames.includes(town.name));
+    }
+
+    var searchPvp = document.querySelector("#searchPvp").value;
+    if (searchPvp !== "all") {
+        townSearch = townSearch.filter(
+            town => town.pvp == (searchPvp === "true")
+        );
+    }
+
+    var searchCoordsX = parseFloat(
+        document.querySelector("#searchCoordsTownX").value
     );
+    var searchCoordsY = parseFloat(
+        document.querySelector("#searchCoordsTownY").value
+    );
+    var searchCoordsRad = parseFloat(
+        document.querySelector("#searchCoordsTownRad").value
+    );
+    if (
+        searchCoordsX !== "" &&
+        searchCoordsY !== "" &&
+        searchCoordsRad !== "" &&
+        searchCoordsX <= 25000 &&
+        searchCoordsX >= -25000 &&
+        searchCoordsY <= 25000 &&
+        searchCoordsY >= -25000 &&
+        searchCoordsRad <= 50000 &&
+        searchCoordsRad >= 10 &&
+        !isNaN(searchCoordsX) &&
+        !isNaN(searchCoordsY) &&
+        !isNaN(searchCoordsRad)
+    ) {
+        let townNames = [];
+        for (i in townSearch) {
+            let town = townSearch[i];
+            town.claimedCoords.push(town.spawn);
+            for (j in town.claimedCoords) {
+                let a = searchCoordsX - town.claimedCoords[j].x;
+                let b = searchCoordsY - town.claimedCoords[j].y;
+                let c = Math.sqrt(a * a + b * b);
+
+                if (c < searchCoordsRad || c === searchCoordsRad) {
+                    townNames.push(town.name);
+                }
+            }
+        }
+        townSearch = townSearch.filter(town => townNames.includes(town.name));
+    }
+
     render("towns", townSearch).then(() => update_scroll_bar());
 
     var playerSearch = playerList.filter(player =>
         player.username.toLowerCase().includes(query.toLowerCase())
     );
+
+    var searchWorld = document.querySelector("#searchWorld").value;
+    if (searchWorld !== "all") {
+        playerSearch = playerSearch.filter(
+            player =>
+                player.world === searchWorld ||
+                (player.world.startsWith("minecraft_coven") &&
+                    searchWorld.startsWith("minecraft_coven"))
+        );
+    }
+
+    var searchAfk = document.querySelector("#searchAfk").value;
+    if (searchAfk !== "all") {
+        playerSearch = playerSearch.filter(
+            player => player.afk == (searchAfk === "true")
+        );
+    }
+
+    var searchHealthInput = document.querySelector("#searchHealthInput").value;
+    if (searchHealthInput !== "") {
+        var searchHealthType =
+            document.querySelector("#searchHealthType").value;
+        playerSearch = playerSearch.filter(player =>
+            searchHealthType === "equals"
+                ? player.health == searchHealthInput
+                : searchHealthType === "above"
+                ? player.health > searchHealthInput
+                : player.health < searchHealthInput
+        );
+    }
+
+    var searchArmorInput = document.querySelector("#searchArmorInput").value;
+    if (searchArmorInput !== "") {
+        var searchArmorType = document.querySelector("#searchArmorType").value;
+        playerSearch = playerSearch.filter(player =>
+            searchArmorType === "equals"
+                ? player.armor == searchArmorInput
+                : searchArmorType === "above"
+                ? player.armor > searchArmorInput
+                : player.armor < searchArmorInput
+        );
+    }
+
+    searchCoordsX = parseFloat(
+        document.querySelector("#searchCoordsPlayerX").value
+    );
+    searchCoordsY = parseFloat(
+        document.querySelector("#searchCoordsPlayerY").value
+    );
+    searchCoordsRad = parseFloat(
+        document.querySelector("#searchCoordsPlayerRad").value
+    );
+
+    if (
+        searchCoordsX !== "" &&
+        searchCoordsY !== "" &&
+        searchCoordsRad !== "" &&
+        searchCoordsX <= 25000 &&
+        searchCoordsX >= -25000 &&
+        searchCoordsY <= 25000 &&
+        searchCoordsY >= -25000 &&
+        searchCoordsRad <= 50000 &&
+        searchCoordsRad >= 10 &&
+        !isNaN(searchCoordsX) &&
+        !isNaN(searchCoordsY) &&
+        !isNaN(searchCoordsRad)
+    ) {
+        let playerNames = [];
+        for (i in playerSearch) {
+            let player = playerSearch[i];
+            let a = searchCoordsX - player.coords.x;
+            let b = searchCoordsY - player.coords.y;
+            let c = Math.sqrt(a * a + b * b);
+
+            if (c < searchCoordsRad || c === searchCoordsRad) {
+                playerNames.push(player.username);
+            }
+        }
+        playerSearch = playerSearch.filter(player =>
+            playerNames.includes(player.username)
+        );
+    }
     render("players", playerSearch).then(() => update_scroll_bar());
+}
+
+function clear_search_fields(type) {
+    switch (type) {
+        case "towns":
+            var fields = document.querySelector("#townsSearch").children;
+            for (i in fields) {
+                if (fields[i].tagName === "DIV") {
+                    Array.from(fields[i].children).forEach(child => {
+                        if (child.tagName === "INPUT") child.value = "";
+                        else if (child.tagName === "SELECT")
+                            child.value = child.dataset.default;
+                    });
+                }
+            }
+            break;
+        case "players":
+            var fields = document.querySelector("#playersSearch").children;
+            for (i in fields) {
+                if (fields[i].tagName === "DIV") {
+                    Array.from(fields[i].children).forEach(child => {
+                        if (child.tagName === "INPUT") child.value = "";
+                        else if (child.tagName === "SELECT")
+                            child.value = child.dataset.default;
+                    });
+                }
+            }
+            break;
+        default:
+            break;
+    }
+    search();
+}
+
+function degToRad(degrees) {
+    return (degrees * Math.PI) / 180;
 }
 
 Object.defineProperty(String.prototype, "capitalize", {

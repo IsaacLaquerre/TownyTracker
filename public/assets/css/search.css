@@ -1,0 +1,129 @@
+#searchWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 7.5px;
+    transform: translate(5px, 1px);
+    z-index: 1000;
+}
+
+#searchWrapper svg {
+    fill: #bbbbbb;
+    width: 25px;
+    height: 25px;
+    transform: translate(2.5px, 4px);
+}
+
+#searchWrapper input#searchBar {
+    width: 175px;
+    height: 25px;
+    padding: 2.5px 5px;
+    background-color: var(--bgColor);
+    border: 2px solid var(--bgColor2);
+    color: var(--textColor);
+    transition: 0.2s ease-out;
+}
+
+#searchWrapper input#searchBar:focus,
+#searchWrapper:has(input:focus) input#searchBar,
+#searchWrapper:has(select:focus) input#searchBar,
+#searchWrapper:has(#advancedSearch:hover) input#searchBar {
+    outline: 1px solid #bbbbbb;
+    background-color: var(--bgColor2);
+    box-shadow: 0 0 5px var(--textColor);
+}
+
+#searchWrapper input#searchBar:focus + #advancedSearch,
+#advancedSearch:hover,
+#advancedSearch:has(input:focus),
+#advancedSearch:has(select:focus) {
+    display: block;
+}
+
+#searchWrapper input#searchBar:hover {
+    background-color: var(--bgColor2);
+}
+
+#advancedSearch {
+    width: 185px;
+    height: max-content;
+    background-color: var(--bgColor2);
+    border: 2px solid var(--bgColor3);
+    display: none;
+    position: absolute;
+    top: 35px;
+    right: -2px;
+    z-index: 1000;
+    padding: 15px;
+}
+
+#advancedSearch input {
+    width: 115px;
+    height: 15px;
+    padding: 2.5px 5px;
+    background-color: var(--bgColor);
+    border: 1px solid var(--bgColor3);
+    color: var(--textColor);
+    transition: 0.2s ease-out;
+}
+
+#advancedSearch input:focus {
+    outline: 1px solid #bbbbbb;
+    background-color: var(--bgColor2);
+    box-shadow: 0 0 5px var(--textColor);
+}
+
+#advancedSearch input:hover {
+    background-color: var(--bgColor2);
+}
+
+#advancedSearch div.searchCoords {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+#advancedSearch div.searchCoords input {
+    width: 25%;
+}
+
+#advancedSearch #searchHealthInput,
+#advancedSearch #searchArmorInput {
+    width: 15%;
+}
+
+#advancedSearch div.container {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#advancedSearch div.container div {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: start;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+div.clearFields span {
+    text-decoration: underline;
+    cursor: pointer;
+    user-select: none;
+}
+
+#townsSearch:not(.container.selected) {
+    display: none;
+}
+
+#playersSearch:not(.container.selected) {
+    display: none;
+}
+
+#searchWorld {
+    width: 125px;
+}
